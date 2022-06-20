@@ -17,6 +17,8 @@ namespace renmo {
             void swap_buffers();
             void process_input();
             void clear_colour(float r, float g, float b);
+            void setup_imgui();
+            void get_display_size(int* display_w, int* display_h);
 
         private:
             GLFWwindow* glfw_window;

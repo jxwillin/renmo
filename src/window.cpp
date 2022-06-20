@@ -5,6 +5,10 @@
 
 #include <iostream>
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 void framebuffer_size_callback(GLFWwindow* glfw_window, int width, int height);
 
 renmo::Window::Window(unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT) {
@@ -50,6 +54,14 @@ void renmo::Window::set_framebuffer_size_change_callback() {
 
 void renmo::Window::clear_colour(float r, float g, float b) {
     glClearColor( r, g, b, 1.0f);
+}
+
+void renmo::Window::setup_imgui() {
+    ImGui_ImplGlfw_InitForOpenGL(glfw_window, true);
+}
+
+void renmo::Window::get_display_size(int *display_w, int *display_h) {
+    glfwGetFramebufferSize(glfw_window, display_w, display_h);
 }
 
 void framebuffer_size_callback(GLFWwindow* glfw_window, int width, int height) {
