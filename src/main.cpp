@@ -50,6 +50,38 @@ int main()
         ImGui::NewFrame();
         bool show_demo_window = true;
         ImGui::ShowDemoWindow(&show_demo_window);
+
+        ImGui::Begin("Settings");
+
+        const char* scenes[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIIIIII", "JJJJ", "KKKKKKK" };
+        static int scene_current = 0;
+        ImGui::Combo("Scene", &scene_current, scenes, IM_ARRAYSIZE(scenes));
+        if (ImGui::CollapsingHeader("Scene Description")) {
+            ImGui::Text("ABOUT THIS DEMO:");
+            ImGui::Text("ABOUT THIS DEMO:");
+            ImGui::Text("ABOUT THIS DEMO:");
+            ImGui::Text("ABOUT THIS DEMO:");
+        }
+
+        const char* renderers[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIIIIII", "JJJJ", "KKKKKKK" };
+        static int renderer_current = 0;
+        ImGui::Combo("Renderer", &renderer_current, renderers, IM_ARRAYSIZE(renderers));
+        if (ImGui::CollapsingHeader("Renderer Settings")) {
+            ImGui::Text("ABOUT THIS DEMO:");
+            ImGui::Text("ABOUT THIS DEMO:");
+            ImGui::Text("ABOUT THIS DEMO:");
+            ImGui::Text("ABOUT THIS DEMO:");
+        }
+        if (ImGui::CollapsingHeader("Renderer Description")) {
+            ImGui::Text("ABOUT THIS DEMO:");
+            ImGui::Text("ABOUT THIS DEMO:");
+            ImGui::Text("ABOUT THIS DEMO:");
+            ImGui::Text("ABOUT THIS DEMO:");
+        }
+
+
+        ImGui::End();
+
         ImGui::Render();
         int display_w, display_h;
         gl_window->get_display_size(&display_w, &display_h);
