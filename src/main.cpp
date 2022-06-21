@@ -11,7 +11,7 @@
 #include <iostream>
 
 #include <memory>
-#include <renmo.h>
+#include <renmo.hpp>
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -33,6 +33,12 @@ int main()
     _renderers.push_back(std::move(std::make_unique<renmo::TestRenderer>("C","a\nb\nc",std::vector<std::string>())));
     _renderers.push_back(std::move(std::make_unique<renmo::TestRenderer>("D","a\nb\nc\nd",std::vector<std::string>())));
 
+    std::vector<std::unique_ptr<renmo::SceneInterface>> _scenes;
+    _scenes.push_back(std::move(std::make_unique<renmo::SceneInterface>("W","w",std::vector<std::string>())));
+    _scenes.push_back(std::move(std::make_unique<renmo::SceneInterface>("X","w\nx",std::vector<std::string>())));
+    _scenes.push_back(std::move(std::make_unique<renmo::SceneInterface>("Y","w\nx\ny",std::vector<std::string>())));
+    _scenes.push_back(std::move(std::make_unique<renmo::SceneInterface>("Z","w\nx\ny\nz",std::vector<std::string>())));
+    
 
     std::unique_ptr<renmo::Context> gl_context = std::make_unique<renmo::Context>();
     std::unique_ptr<renmo::Window> gl_window = std::make_unique<renmo::Window>(SCR_WIDTH,SCR_HEIGHT);
@@ -45,20 +51,41 @@ int main()
     gl_window->setup_imgui();
     ImGui_ImplOpenGL3_Init("#version 100");
 
+    //Convert data into format IMGUI can use
     const char** _imgui_renderer_names = (const char**)malloc(_renderers.size()*sizeof(char*));
-    for(int i = 0; i < _renderers.size(); i++)
+    const char** _imgui_renderer_descs = (const char**)malloc(_renderers.size()*sizeof(char*));
     {
-        char* tmp = (char*)malloc(strlen(_renderers.at(i)->get_name().c_str()));
-        strcpy(tmp, _renderers.at(i)->get_name().c_str());
-        _imgui_renderer_names[i] = tmp;
+        for(int i = 0; i < _renderers.size(); i++)
+        {
+            char* tmp = (char*)malloc(strlen(_renderers.at(i)->get_name().c_str()));
+            strcpy(tmp, _renderers.at(i)->get_name().c_str());
+            _imgui_renderer_names[i] = tmp;
+        }
+    
+        for(int i = 0; i < _renderers.size(); i++)
+        {
+            char* tmp = (char*)malloc(strlen(_renderers.at(i)->get_desc().c_str()));
+            strcpy(tmp, _renderers.at(i)->get_desc().c_str());
+            _imgui_renderer_descs[i] = tmp;
+        }
     }
 
-    const char** _imgui_renderer_descs = (const char**)malloc(_renderers.size()*sizeof(char*));
-    for(int i = 0; i < _renderers.size(); i++)
+    const char** _imgui_scene_names = (const char**)malloc(_scenes.size()*sizeof(char*));
+    const char** _imgui_scene_descs = (const char**)malloc(_scenes.size()*sizeof(char*));
     {
-        char* tmp = (char*)malloc(strlen(_renderers.at(i)->get_desc().c_str()));
-        strcpy(tmp, _renderers.at(i)->get_desc().c_str());
-        _imgui_renderer_descs[i] = tmp;
+        for(int i = 0; i < _scenes.size(); i++)
+        {
+            char* tmp = (char*)malloc(strlen(_scenes.at(i)->get_name().c_str()));
+            strcpy(tmp, _scenes.at(i)->get_name().c_str());
+            _imgui_scene_names[i] = tmp;
+        }
+    
+        for(int i = 0; i < _scenes.size(); i++)
+        {
+            char* tmp = (char*)malloc(strlen(_scenes.at(i)->get_desc().c_str()));
+            strcpy(tmp, _scenes.at(i)->get_desc().c_str());
+            _imgui_scene_descs[i] = tmp;
+        }
     }
 
     MACRO_DEBUG_PRINT
@@ -79,19 +106,15 @@ int main()
         ImGui::Begin("Settings");
 
         static int scene_current = 0;
-        const char* scenes[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIIIIII", "JJJJ", "KKKKKKK" };
-        ImGui::Combo("Scene", &scene_current, scenes, IM_ARRAYSIZE(scenes));
+        ImGui::Combo("Scene", &scene_current, _imgui_scene_names, _scenes.size());
         if (ImGui::CollapsingHeader("Scene Description")) {
-            ImGui::Text("ABOUT THIS DEMO:");
+            ImGui::Text(_imgui_scene_descs[scene_current]);
         }
 
         static int renderer_current = 0;
         ImGui::Combo("Renderer", &renderer_current, _imgui_renderer_names, _renderers.size());
         if (ImGui::CollapsingHeader("Renderer Settings")) {
-            ImGui::Text("ABOUT THIS DEMO:");
-            ImGui::Text("ABOUT THIS DEMO:");
-            ImGui::Text("ABOUT THIS DEMO:");
-            ImGui::Text("ABOUT THIS DEMO:");
+            ImGui::Text("Renderer settings");
         }
         if (ImGui::CollapsingHeader("Renderer Description")) {
             ImGui::Text(_imgui_renderer_descs[renderer_current]);
@@ -113,6 +136,21 @@ int main()
     for(int i = 0; i < _renderers.size(); i++)
     {
         free((void*)_imgui_renderer_names[i]);
+    }
+
+    for(int i = 0; i < _renderers.size(); i++)
+    {
+        free((void*)_imgui_renderer_descs[i]);
+    }
+
+    for(int i = 0; i < _scenes.size(); i++)
+    {
+        free((void*)_imgui_scene_names[i]);
+    }
+
+    for(int i = 0; i < _scenes.size(); i++)
+    {
+        free((void*)_imgui_scene_descs[i]);
     }
 
     return 0;
