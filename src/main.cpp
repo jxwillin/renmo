@@ -133,24 +133,27 @@ int main()
         MACRO_DEBUG_PRINT
     }
 
-    for(int i = 0; i < _renderers.size(); i++)
+    //clean up C memory allocations
     {
-        free((void*)_imgui_renderer_names[i]);
-    }
+        for(int i = 0; i < _renderers.size(); i++)
+        {
+            free((void*)_imgui_renderer_names[i]);
+        }
 
-    for(int i = 0; i < _renderers.size(); i++)
-    {
-        free((void*)_imgui_renderer_descs[i]);
-    }
+        for(int i = 0; i < _renderers.size(); i++)
+        {
+            free((void*)_imgui_renderer_descs[i]);
+        }
 
-    for(int i = 0; i < _scenes.size(); i++)
-    {
-        free((void*)_imgui_scene_names[i]);
-    }
+        for(int i = 0; i < _scenes.size(); i++)
+        {
+            free((void*)_imgui_scene_names[i]);
+        }
 
-    for(int i = 0; i < _scenes.size(); i++)
-    {
-        free((void*)_imgui_scene_descs[i]);
+        for(int i = 0; i < _scenes.size(); i++)
+        {
+            free((void*)_imgui_scene_descs[i]);
+        }
     }
 
     return 0;
