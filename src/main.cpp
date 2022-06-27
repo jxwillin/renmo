@@ -48,10 +48,11 @@ void imgui_render_interface_wrapper(
     std::vector<std::unique_ptr<ScopedAutoFree>> &ptrCollection) {
     for(int i = 0; i < _renderers.size(); i++)
     {
-        char* tmp = (char*)malloc(strlen(_renderers.at(i)->get_name().c_str()));
-        strcpy(tmp, _accessor(_renderers.at(i)).c_str());
-        _imgui_renderer_names[i] = tmp;
-        ptrCollection.push_back(std::move(std::make_unique<ScopedAutoFree>((void*)tmp)));
+        const char* source = _accessor(_renderers.at(i)).c_str();
+        char* copy = (char*)malloc(strlen(source));
+        strcpy(copy, source);
+        _imgui_renderer_names[i] = copy;
+        ptrCollection.push_back(std::move(std::make_unique<ScopedAutoFree>((void*)copy)));
     }
     ptrCollection.push_back(std::move(std::make_unique<ScopedAutoFree>((void*)_imgui_renderer_names)));
 }
@@ -64,10 +65,11 @@ void imgui_scene_interface_wrapper(
     std::vector<std::unique_ptr<ScopedAutoFree>> &ptrCollection) {
     for(int i = 0; i < _scene.size(); i++)
     {
-        char* tmp = (char*)malloc(strlen(_scene.at(i)->get_name().c_str()));
-        strcpy(tmp, _accessor(_scene.at(i)).c_str());
-        _imgui_renderer_names[i] = tmp;
-        ptrCollection.push_back(std::move(std::make_unique<ScopedAutoFree>((void*)tmp)));
+        const char* source = _accessor(_scene.at(i)).c_str();
+        char* copy = (char*)malloc(strlen(source));
+        strcpy(copy, source);
+        _imgui_renderer_names[i] = copy;
+        ptrCollection.push_back(std::move(std::make_unique<ScopedAutoFree>((void*)copy)));
     }
     ptrCollection.push_back(std::move(std::make_unique<ScopedAutoFree>((void*)_imgui_renderer_names)));
 }
@@ -139,8 +141,6 @@ int main()
     gl_window->setup_imgui();
     ImGui_ImplOpenGL3_Init("#version 100");
 
-    //Convert data into format IMGUI can use
-    //TODO:: figure way to convert to smart pointers
     std::vector<std::unique_ptr<ScopedAutoFree>> ptrCollection;
     const char** _imgui_renderer_names = (const char**)malloc(_renderers.size()*sizeof(char*));
     imgui_render_interface_wrapper(_renderers, [](std::unique_ptr<renmo::RendererInterface>& inst) { return inst->get_name(); }, _imgui_renderer_names, ptrCollection);
