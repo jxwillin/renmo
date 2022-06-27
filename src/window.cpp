@@ -23,18 +23,6 @@ renmo::Window::Window(unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT) {
     glfwSetFramebufferSizeCallback(glfw_window, framebuffer_size_callback); 
 }
 
-void renmo::Window::make_current_context() {
-    glfwMakeContextCurrent(glfw_window);
-
-    static bool run_once_flag = false;
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        //TODO:: throw exception
-    }
-    run_once_flag = true;
-}
-
 bool renmo::Window::should_close() {
     return !glfwWindowShouldClose(glfw_window);
 }
